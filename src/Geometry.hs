@@ -67,7 +67,28 @@ evaluate p  = case p of
                                                       evR22 <- evaluate r22
                                                       (p1, p2) <- circleCircleIntersection (center1, (evR11, evR12)) (center2, (evR21, evR22))
                                                       return p2
-  CLIntersect_1 (Circle o1 (r11, r12)) (Line p3 p4) -> undefined
-  CLIntersect_2 (Circle o1 (r11, r12)) (Line p3 p4) -> undefined
+  CLIntersect_1 (Circle o1 (r1, r2)) (Line p1 p2) -> do
+                                                           center <- evaluate o1
+                                                           evR1 <- evaluate r1
+                                                           evR2 <- evaluate r2
+                                                           c1 <- evaluate p1
+                                                           c2 <- evaluate p2
+                                                           (p1, p2) <- lineCircleIntersection (c1, c2) (center, (evR1, evR2))
+                                                           return p1
+  CLIntersect_2 (Circle o1 (r1, r2)) (Line p1 p2) -> do
+                                                             center <- evaluate o1
+                                                             evR1 <- evaluate r1
+                                                             evR2 <- evaluate r2
+                                                             c1 <- evaluate p1
+                                                             c2 <- evaluate p2
+                                                             (p1, p2) <- lineCircleIntersection (c1, c2) (center, (evR1, evR2))
+                                                             return p2
 
 
+bisectAngle :: forall d. Point d -> Point d -> Point d -> Point d
+bisectAngle a b c =
+  let ab = Line a b in
+  let circleToC = Circle b (b, c) in
+  let point1 = CLIntersect_1 circleToC ab in
+  let point2 = CLIntersect_1 circleToC (Line b c) in
+  middlePoint point1 point2
