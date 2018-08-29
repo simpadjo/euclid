@@ -92,3 +92,12 @@ bisectAngle a b c =
   let point1 = CLIntersect_1 circleToC ab in
   let point2 = CLIntersect_1 circleToC (Line b c) in
   middlePoint point1 point2
+
+
+
+movePointByVector :: forall d. Point d -> Point d -> Point d -> Point d
+movePointByVector p v1 v2 =
+  let a = CLIntersect_1 (Circle v1 (v1, v2)) (Line p v1) in
+  let circle = Circle p (v1, v2) in
+  let b = CLIntersect_1 circle (Line p v1) in
+  CCIntersect_1 circle (Circle b (a, v2))

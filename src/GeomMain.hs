@@ -17,4 +17,5 @@ main =
              putStrLn(show m)
              putStrLn(show (evaluate mm))
              putStrLn(show (evaluate bis))
+             putStrLn(show (evaluate (movePointByVector (Given (0.0, 0.0)) (Given (2.0, 3.0)) (Given (3.0, 4.0)))))
              putStrLn ("done")
