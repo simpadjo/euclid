@@ -1,12 +1,42 @@
 {-#LANGUAGE GADTs, EmptyDataDecls #-}
 
-module Describe where
+module Evaluate where
 
 import Geometry2
+import GeometryUtil2
+import Data.Maybe
+
+type NumericExpr = Expr Coords
+
+
+evaluate :: NumericExpr a ->  Either String a
+evaluate expr = case expr of
+  Point pt -> Right pt
+  Line l -> Right l
+  Circle c -> Right c
+  LLIntersect l1 l2 -> do
+                         e1 <- evaluate l1
+                         e2 <- evaluate l2
+                         return (lineIntersection e1 e2)
+  CCIntersect c1 c2 -> do
+                           e1 <- evaluate c1
+                           e2 <- evaluate c2
+                           return (circleCircleIntersection e1 e2)
+  CLIntersect c l -> do
+                             e1 <- evaluate c
+                             e2 <- evaluate l
+                             return (lineCircleIntersection e2 e1)
+  IsInside p c -> undefined --TODO
+  AreOnTheSameSide p1 p2 l -> undefined --TODO
+  Extract e -> evaluate e >>= (\m -> case m of
+                                        Just r -> Right r
+                                        Nothing -> Left "Unsafe extraction failed")
+  FlatMap desc ex fn -> evaluate ex >>= (\r -> evaluate (fn r))
 
 
 
-describe0 :: Show p => Int -> Expr p a -> (String, Int)
+
+{-describe0 :: Show p => Int -> Expr p a -> (String, Int)
 describe0 currentStep expr =
   let line0 step desc = (show step) ++ ") " ++ desc in
   let line1 step desc ref = (show step) ++ ") " ++ desc ++ " from step " ++ (show ref) ++ "\n" in
@@ -31,20 +61,12 @@ describe0 currentStep expr =
      Extract e -> describe0 currentStep e
      FlatMap desc ex fn -> let (lines, pos) = describe0 currentStep ex in
                            let nextLine = line0 pos desc in
-                           (lines ++ nextLine, pos +1)
+                           (lines ++ nextLine, pos +1)-}
 
 
---TODO: deduplication of messages
-describe :: Show p => Expr p a -> String
-describe expr = fst (describe0 1 expr)
-
--------------------
-
-{-
 main :: IO ()
 main =
-          let m = middlePoint "A" "B" in
+          let m = middlePoint (1.0, 2.0) (2.0, 3.0) in
            do
-             putStrLn(debugExpr m)
+             putStrLn(show (evaluate m))
              putStrLn ("done")
-             putStrLn(describe m)-}

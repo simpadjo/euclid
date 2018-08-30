@@ -1,4 +1,4 @@
-{-# LANGUAGE RankNTypes #-}
+{-# LANGUAGE RankNTypes #
 
 
 module Geometry where
@@ -100,4 +100,4 @@ movePointByVector p v1 v2 =
   let a = CLIntersect_1 (Circle v1 (v1, v2)) (Line p v1) in
   let circle = Circle p (v1, v2) in
   let b = CLIntersect_1 circle (Line p v1) in
-  CCIntersect_1 circle (Circle b (a, v2))
+  CCIntersect_1 circle (Circle b (a, v2))-}

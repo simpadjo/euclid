@@ -24,10 +24,6 @@ type LineAB p = (p, p)
 type CircleOAB p = (p, (p, p))
 type Expr p = AbstractExpr p (LineAB p) (CircleOAB p)
 
-type Textual = Expr String
-
-type Numerical = Expr (Either String Coords)
-
 
 type TwoPointsToOneAlg = forall p. p -> p -> Expr p p
 
