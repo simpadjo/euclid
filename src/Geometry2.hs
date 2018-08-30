@@ -56,11 +56,14 @@ middlePoint p1 p2 =
   Extract (LLIntersect l1 orthogLine)
 
 
+
+
 ---------------------
 
+{-
 main :: IO ()
 main =
           let m = middlePoint "A" "B" in
            do
              putStrLn(debugExpr m)
-             putStrLn ("done")
+             putStrLn ("done")-}
