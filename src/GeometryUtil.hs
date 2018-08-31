@@ -1,4 +1,4 @@
-module GeometryUtil2 where
+module GeometryUtil where
 
 eps = 0.001 :: Double
 type Coords = (Double, Double)

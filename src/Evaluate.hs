@@ -2,8 +2,8 @@
 
 module Evaluate where
 
-import Geometry2
-import GeometryUtil2
+import Geometry
+import GeometryUtil
 import Data.Maybe
 
 type NumericExpr = Expr Coords
@@ -39,11 +39,3 @@ evaluate expr = case expr of
                                         Just r -> Right r
                                         Nothing -> Left "Unsafe extraction failed")
   FlatMap desc ex fn -> evaluate ex >>= (\r -> evaluate (fn r))
-
-
-main :: IO ()
-main =
-          let m = middlePoint (1.0, 2.0) (2.0, 3.0) in
-           do
-             putStrLn(show (evaluate m))
-             putStrLn ("done")

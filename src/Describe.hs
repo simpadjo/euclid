@@ -2,9 +2,7 @@
 
 module Describe where
 
-import Geometry2
-
-
+import Geometry
 
 describe0 :: Show p => Int -> Expr p a -> (String, Int)
 describe0 currentStep expr =
@@ -31,19 +29,9 @@ describe0 currentStep expr =
      Extract e -> describe0 currentStep e
      FlatMap desc ex fn -> let (lines, pos) = describe0 currentStep ex in
                            let nextLine = line0 pos desc in
-                           (lines ++ nextLine, pos +1)
+                           (lines ++ nextLine ++ "\n", pos +1)
 
 
 --TODO: deduplication of messages
 describe :: Show p => Expr p a -> String
 describe expr = fst (describe0 1 expr)
-
--------------------
-
-main :: IO ()
-main =
-          let m = bisectAngle "A" "B" "C" in
-           do
-             putStrLn(debugExpr m)
-             putStrLn ("done")
-             putStrLn(describe m)

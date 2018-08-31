@@ -1,10 +1,8 @@
-{-# LANGUAGE RankNTypes #-}
-{-#LANGUAGE GADTs, EmptyDataDecls #-}
+{-#LANGUAGE GADTs #-}
 
-module Geometry2 where
+module Geometry where
 import Data.Either
 import Control.Monad
-
 
 data AbstractExpr p l c a where
    Point :: p -> AbstractExpr p l c p
@@ -24,8 +22,6 @@ type CircleOAB p = (p, (p, p))
 type Expr p = AbstractExpr p (LineAB p) (CircleOAB p)
 
 
-type TwoPointsToOneAlg = forall p. p -> p -> Expr p p
-
 debugExpr :: Show p =>  Expr p a -> String
 debugExpr expr =
   case expr of
@@ -40,29 +36,3 @@ debugExpr expr =
     Extract e ->  "Extract " ++ (debugExpr e)
     FlatMap desc e fn -> "Flatmap " ++ desc ++ " to " ++(debugExpr e)
 
-middlePoint :: TwoPointsToOneAlg
-middlePoint p1 p2 =
-  let l1 = Line (p1, p2) in
-  let radius = (p1, p2) in
-  let circle1 = Circle (p1, radius) in
-  let circle2 = Circle (p2, radius) in
-  let twoPoints = Extract (CCIntersect circle1 circle2) in
-  let orthogLine = FlatMap "line between two points" twoPoints (\pair -> Line pair) in
-  Extract (LLIntersect l1 orthogLine)
-
-
-
-bisectAngle :: forall d. d -> d -> d -> Expr d d
-bisectAngle a b c =
-  let ab = Line (a, b) in
-  let circleToC = Circle (b, (b, c)) in
-  let twoPoints = Extract (CLIntersect circleToC ab) in
-  FlatMap "middle point" twoPoints (\(x, y) -> middlePoint x y)
----------------------
-
-{-main :: IO ()
-main =
-          let m = bisectAngle "A" "B" "C" in
-           do
-             putStrLn(debugExpr m)
-             putStrLn ("done")-}
