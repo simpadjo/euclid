@@ -40,11 +40,10 @@ describe expr = fst (describe0 1 expr)
 
 -------------------
 
-{-
 main :: IO ()
 main =
-          let m = middlePoint "A" "B" in
+          let m = bisectAngle "A" "B" "C" in
            do
              putStrLn(debugExpr m)
              putStrLn ("done")
-             putStrLn(describe m)-}
+             putStrLn(describe m)

@@ -3,7 +3,6 @@
 
 module Geometry2 where
 import Data.Either
-import GeometryUtil
 import Control.Monad
 
 
@@ -53,13 +52,17 @@ middlePoint p1 p2 =
 
 
 
-
+bisectAngle :: forall d. d -> d -> d -> Expr d d
+bisectAngle a b c =
+  let ab = Line (a, b) in
+  let circleToC = Circle (b, (b, c)) in
+  let twoPoints = Extract (CLIntersect circleToC ab) in
+  FlatMap "middle point" twoPoints (\(x, y) -> middlePoint x y)
 ---------------------
 
-{-
-main :: IO ()
+{-main :: IO ()
 main =
-          let m = middlePoint "A" "B" in
+          let m = bisectAngle "A" "B" "C" in
            do
              putStrLn(debugExpr m)
              putStrLn ("done")-}
