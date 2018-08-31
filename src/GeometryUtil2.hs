@@ -59,3 +59,11 @@ lineCircleIntersectionRegular ((x1, y1), (x2, y2)) ((a, b), rad) =
       let resX1 = (a + b*m - d*m - (sqrt delta)) / (1 + m*m) in
       let resX2 = (a + b*m - d*m + (sqrt delta)) / (1 + m*m) in
       Just ((resX1, resX1*m + d), (resX2, resX2*m + d))
+
+
+isPointInCircle :: Coords -> (Coords, (Coords, Coords)) -> Bool
+isPointInCircle p (c, r) = (distSqare (p, c)) < (distSqare r)
+
+--https://stackoverflow.com/questions/1560492/how-to-tell-whether-a-point-is-to-the-right-or-left-side-of-a-line#3461533
+pointToLineOrientation :: Coords -> (Coords, Coords) -> Bool
+pointToLineOrientation (x, y) ((ax, ay), (bx, by)) = ((bx -ax) * (y - ay) - (by -ay) * (x - ax)) > 0
