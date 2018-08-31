@@ -5,6 +5,7 @@ module Evaluate where
 import Geometry
 import GeometryUtil
 import Data.Maybe
+import Control.Applicative
 
 type NumericExpr = Expr Coords
 
@@ -14,27 +15,12 @@ evaluate expr = case expr of
   Point pt -> Right pt
   Line l -> Right l
   Circle c -> Right c
-  LLIntersect l1 l2 -> do
-                         e1 <- evaluate l1
-                         e2 <- evaluate l2
-                         return (lineIntersection e1 e2)
-  CCIntersect c1 c2 -> do
-                           e1 <- evaluate c1
-                           e2 <- evaluate c2
-                           return (circleCircleIntersection e1 e2)
-  CLIntersect c l -> do
-                             e1 <- evaluate c
-                             e2 <- evaluate l
-                             return (lineCircleIntersection e2 e1)
-  IsInside p c -> do
-                    p1 <- evaluate p
-                    c1 <- evaluate c
-                    return (isPointInCircle p1 c1)
-  AreOnTheSameSide p1 p2 l -> do
-                                 e1 <- evaluate p1
-                                 e2 <- evaluate p2
-                                 ll <- evaluate l
-                                 return (pointToLineOrientation e1 ll == pointToLineOrientation e2 ll)
+  LLIntersect l1 l2 ->  liftA2 lineIntersection (evaluate l1) (evaluate l2)
+  CCIntersect c1 c2 -> liftA2 circleCircleIntersection (evaluate c1) (evaluate c2)
+  CLIntersect c l -> liftA2 lineCircleIntersection (evaluate l) (evaluate c)
+  IsInside p c -> liftA2 isPointInCircle (evaluate p) (evaluate c)
+  AreOnTheSameSide p1 p2 l -> let sameSide x y z = pointToLineOrientation x z == pointToLineOrientation y z in
+                              liftA3 sameSide (evaluate p1) (evaluate p2) (evaluate l)
   Extract e -> evaluate e >>= (\m -> case m of
                                         Just r -> Right r
                                         Nothing -> Left "Unsafe extraction failed")
