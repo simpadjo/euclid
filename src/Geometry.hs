@@ -4,22 +4,20 @@ module Geometry where
 import Data.Either
 import Control.Monad
 
-data AbstractExpr p l c a where
-   Point :: p -> AbstractExpr p l c p
-   Line :: l -> AbstractExpr p l c l
-   Circle :: c -> AbstractExpr p l c c
-   LLIntersect :: (AbstractExpr p l c l) -> (AbstractExpr p l c l) -> AbstractExpr p l c (Maybe p)
-   CCIntersect :: (AbstractExpr p l c c) -> (AbstractExpr p l c c) -> AbstractExpr p l c (Maybe (p ,p))
-   CLIntersect :: (AbstractExpr p l c c) -> (AbstractExpr p l c l) -> AbstractExpr p l c (Maybe (p ,p))
-   IsInside :: (AbstractExpr p l c p) -> (AbstractExpr p l c c) -> AbstractExpr p l c Bool
-   AreOnTheSameSide :: (AbstractExpr p l c p) -> (AbstractExpr p l c p) -> (AbstractExpr p l c l) -> AbstractExpr p l c Bool
-   Extract :: (AbstractExpr p l c (Maybe x)) -> (AbstractExpr p l c x)
-   FlatMap :: String -> (AbstractExpr p l c x) -> (x -> AbstractExpr p l c y) -> (AbstractExpr p l c y)
-
-
 type LineAB p = (p, p)
 type CircleOAB p = (p, (p, p))
-type Expr p = AbstractExpr p (LineAB p) (CircleOAB p)
+
+data Expr p a where
+   Point :: p -> Expr p p
+   Line :: LineAB p -> Expr p (LineAB p)
+   Circle :: CircleOAB p -> Expr p (CircleOAB p)
+   LLIntersect :: (Expr p (LineAB p)) -> (Expr p (LineAB p)) -> Expr p (Maybe p)
+   CCIntersect :: (Expr p (CircleOAB p)) -> (Expr p (CircleOAB p)) -> Expr p (Maybe (p ,p))
+   CLIntersect :: (Expr p (CircleOAB p)) -> (Expr p (LineAB p)) -> Expr p (Maybe (p ,p))
+   IsInside :: (Expr p p) -> (Expr p (CircleOAB p)) -> Expr p Bool
+   AreOnTheSameSide :: (Expr p p) -> (Expr p p) -> (Expr p (LineAB p)) -> Expr p Bool
+   Extract :: (Expr p (Maybe x)) -> (Expr p x)
+   FlatMap :: String -> (Expr p x) -> (x -> Expr p y) -> (Expr p y)
 
 
 debugExpr :: Show p =>  Expr p a -> String
