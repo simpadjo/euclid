@@ -1,6 +1,8 @@
 module GeometryUtil where
 
-eps = 0.001 :: Double
+eps :: Double
+eps = 0.001
+
 type Coords = (Double, Double)
 lineIntersection :: (Coords, Coords) -> (Coords, Coords) -> Maybe Coords
 lineIntersection ((x1, y1), (x2, y2)) ((x3, y3), (x4, y4)) =
@@ -39,7 +41,7 @@ lineCircleIntersection ((x1, y1), (x2, y2)) ((a, b), rad) =
    else lineCircleIntersectionRegular ((x1, y1), (x2, y2)) ((a, b), rad)
 
 lineCircleIntersectionVertical :: (Coords, Coords) -> (Coords, (Coords, Coords)) -> Maybe (Coords, Coords)
-lineCircleIntersectionVertical ((x1, y1), (x2, y2)) ((a, b), rad) =
+lineCircleIntersectionVertical ((x1, _), _) ((a, b), rad) =
   let rSq = distSqare rad in
   let deltaSq = rSq - (a - x1) * (a - x1) in
   if deltaSq < eps

@@ -7,7 +7,6 @@ import Geometry
 describe0 :: Show p => Int -> Expr p a -> (String, Int)
 describe0 currentStep expr =
   let line0 step desc = (show step) ++ ") " ++ desc in
-  let line1 step desc ref = (show step) ++ ") " ++ desc ++ " from step " ++ (show ref) ++ "\n" in
   let line2 step desc ref1 ref2 = (show step) ++ ") " ++ desc ++ " from steps " ++ (show ref1) ++ " and " ++ (show ref2) ++ "\n"  in
   let describeTwo step ex1 ex2 stepName = let (part1, pos1) = describe0 step ex1 in
                                           let (part2, pos2) = describe0 pos1 ex2 in
@@ -27,9 +26,9 @@ describe0 currentStep expr =
                                  let nextLine = (show pos3) ++ ") " ++ "Determine if two points are on the same side against the line" ++ " from steps " ++ (show pos1) ++ " "++ (show pos2)++" and " ++ (show pos3) ++ "\n"  in
                                  (part1 ++ part2 ++ part3 ++ nextLine, pos3+1)
      Extract e -> describe0 currentStep e
-     FlatMap desc ex fn -> let (lines, pos) = describe0 currentStep ex in
+     FlatMap desc ex _ -> let (aggLines, pos) = describe0 currentStep ex in
                            let nextLine = line0 pos desc in
-                           (lines ++ nextLine ++ "\n", pos +1)
+                           (aggLines ++ nextLine ++ "\n", pos +1)
 
 
 --TODO: deduplication of messages

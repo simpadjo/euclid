@@ -4,11 +4,9 @@ module Evaluate where
 
 import Geometry
 import GeometryUtil
-import Data.Maybe
 import Control.Applicative
 
 type NumericExpr = Expr Coords
-
 
 evaluate :: NumericExpr a ->  Either String a
 evaluate expr = case expr of
@@ -24,4 +22,4 @@ evaluate expr = case expr of
   Extract e -> evaluate e >>= (\m -> case m of
                                         Just r -> Right r
                                         Nothing -> Left "Unsafe extraction failed")
-  FlatMap desc ex fn -> evaluate ex >>= (\r -> evaluate (fn r))
+  FlatMap _ ex fn -> evaluate ex >>= (\r -> evaluate (fn r))

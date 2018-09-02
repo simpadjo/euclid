@@ -1,8 +1,6 @@
 {-#LANGUAGE GADTs #-}
 
 module Geometry where
-import Data.Either
-import Control.Monad
 
 type LineAB p = (p, p)
 type CircleOAB p = (p, (p, p))
@@ -32,5 +30,5 @@ debugExpr expr =
     IsInside pt c -> "IsInside " ++ (debugExpr pt) ++ " " ++(debugExpr c)
     AreOnTheSameSide p1 p2 l -> "AreOnTheSameSide " ++ (debugExpr p1) ++ " " ++(debugExpr p2) ++ " " ++ (debugExpr l)
     Extract e ->  "Extract " ++ (debugExpr e)
-    FlatMap desc e fn -> "Flatmap " ++ desc ++ " to " ++(debugExpr e)
+    FlatMap desc e _ -> "Flatmap " ++ desc ++ " to " ++(debugExpr e)
 
