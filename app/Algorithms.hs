@@ -14,9 +14,8 @@ middlePoint p1 p2 =
   let circle1 = Circle (p1, radius) in
   let circle2 = Circle (p2, radius) in
   let twoPoints = Extract (CCIntersect circle1 circle2) in
-  let orthogLine = FlatMap "line between two points" twoPoints (\pair -> Line pair) in
+  let orthogLine = FlatMap "line between two points" twoPoints Line in
   Extract (LLIntersect l1 orthogLine)
-
 
 
 bisectAngle :: ThreePointsToOneAlg
@@ -24,7 +23,7 @@ bisectAngle a b c =
   let ab = Line (a, b) in
   let circleToC = Circle (b, (b, c)) in
   let twoPoints = Extract (CLIntersect circleToC ab) in
-  FlatMap "middle point" twoPoints (\(x, y) -> middlePoint x y)
+  FlatMap "middle point" twoPoints (uncurry middlePoint)
 
 
 centerOfTriangle :: ThreePointsToOneAlg
@@ -34,5 +33,3 @@ centerOfTriangle a b c =
   let aa1 = FlatMap "line a a1" a1 (\x -> Line (a, x)) in
   let bb1 = FlatMap "line b b1" b1 (\x -> Line (b, x)) in
   Extract (LLIntersect aa1 bb1)
-
-

@@ -1,4 +1,5 @@
-{-#LANGUAGE GADTs, EmptyDataDecls #-}
+{-#  LANGUAGE GADTs  #-}
+{-#  LANGUAGE LambdaCase #-}
 
 module Evaluate where
 
@@ -19,7 +20,7 @@ evaluate expr = case expr of
   IsInside p c -> liftA2 isPointInCircle (evaluate p) (evaluate c)
   AreOnTheSameSide p1 p2 l -> let sameSide x y z = pointToLineOrientation x z == pointToLineOrientation y z in
                               liftA3 sameSide (evaluate p1) (evaluate p2) (evaluate l)
-  Extract e -> evaluate e >>= (\m -> case m of
-                                        Just r -> Right r
-                                        Nothing -> Left "Unsafe extraction failed")
-  FlatMap _ ex fn -> evaluate ex >>= (\r -> evaluate (fn r))
+  Extract e -> evaluate e >>= \case
+                                 Just r -> Right r
+                                 Nothing -> Left "Unsafe extraction failed"
+  FlatMap _ ex fn -> evaluate ex >>= evaluate . fn

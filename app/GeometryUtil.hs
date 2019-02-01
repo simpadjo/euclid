@@ -7,7 +7,7 @@ type Coords = (Double, Double)
 lineIntersection :: (Coords, Coords) -> (Coords, Coords) -> Maybe Coords
 lineIntersection ((x1, y1), (x2, y2)) ((x3, y3), (x4, y4)) =
   let denom = (x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4) in
-  if (abs denom) < eps
+  if abs denom < eps
     then Nothing
     else let a1 = (x1*y2 - y1*x2) * (x3 - x4) - (x1 - x2) * (x3 * y4 - y3*x4) in
          let a2 = (x1*y2 - y1*x2) * (y3 - y4) - (y1 - y2) * (x3 * y4 - y3*x4) in
